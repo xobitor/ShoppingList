@@ -13,59 +13,64 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static com.example.shoppinglist.ViewLists.lists;
 
+//CLASSE MAIN
 public class MainActivity extends AppCompatActivity {
 
-
+//Criação de variáveis estáticas para serem utilizadas noutras atividades
     static ShoppingList shoppingList = new ShoppingList("Default", new ArrayList<Product>());
     static List<ShoppingList> shoppingLists = new ArrayList<>();
-    ListView lv = null;
+    static ListView lv = null;
     static List<HashMap<String, String>> listItems = new ArrayList<>();
     static HashMap<String, String> products = new HashMap<>();
     static SimpleAdapter adapter = null;
     static TextView totalPrice = null;
+    static String title = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        setTitle(shoppingList.getNome());
+
+//Ao iniciar, definir o título como sendo o nome da lista seleccionada e definir a cor de fundo da atividade
+        title = shoppingList.getNome();
+        setTitle(title);
         getWindow().getDecorView().setBackgroundColor(Color.BLACK);
 
+//Para a aplicação não iniciar sem listas, é criada e apresentada uma lista Default, que poderá ser apagada depois
         if (lists.size() == 0)
         {
             lists.add(shoppingList.getNome());
             shoppingLists.add(shoppingList);
         }
 
+//Criação do adaptador de listView para que os itens da lista de compras seleccionada possam ser apresentados
         adapter = new SimpleAdapter(this, listItems, R.layout.list_item,
                 new String[]{"First Line", "Second Line"}, new int[]{R.id.text1, R.id.text2});
 
+//Mostrar os itens na listView
         lv = findViewById(R.id.listView);
         lv.setAdapter(adapter);
+
+//Definir a listView como clicável
         lv.setClickable(true);
 
+//Alterar o campo preço total para o valor obtido da lista de compras seleccionado
         totalPrice = findViewById(R.id.total_price);
         totalPrice.setText(String.valueOf(shoppingList.getTotalPrice()));
 
+//Definir ação caso se pressione num item da listView durante tempo (Long Press)
+//Neste caso, ao pressionar por um tempo, irá aparecer uma caixa de diálogo a perguntar se tem a certeza que quer
+//apagar o item seleccionado
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
@@ -101,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+//Execução de funções com base nos botões apresentados
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -129,13 +135,16 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+//Recebe dados de output de outras atividades
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
 
             if (data != null) {
-                setTitle(shoppingList.getNome());
+                title = shoppingList.getNome();
+                setTitle(title);
                 adapter.notifyDataSetChanged();
                 lv.setAdapter(adapter);
             }
@@ -145,14 +154,16 @@ public class MainActivity extends AppCompatActivity {
         {
             if (data != null)
             {
-                setTitle(shoppingList.getNome());
+                title = shoppingList.getNome();
+                setTitle(title);
                 adapter.notifyDataSetChanged();
                 lv.setAdapter(adapter);
             }
         }
         else if (resultCode == Activity.RESULT_FIRST_USER)
         {
-            setTitle(shoppingList.getNome());
+            title = shoppingList.getNome();
+            setTitle(title);
             adapter.notifyDataSetChanged();
             lv.setAdapter(adapter);
         }

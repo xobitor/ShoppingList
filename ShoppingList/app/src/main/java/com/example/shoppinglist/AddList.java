@@ -52,6 +52,7 @@ public class AddList extends AppCompatActivity {
 
             MainActivity.shoppingList = shpLst;
             addList(shpLst);
+            MainActivity.title = shpLst.getNome();
             Intent intent = new Intent();
             setResult(2, intent);
             finish();

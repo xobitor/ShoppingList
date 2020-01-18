@@ -73,6 +73,9 @@ public class ViewLists extends AppCompatActivity {
                 }
                 MainActivity.listItems.clear();
                 MainActivity.listItems.add(resultsMap);
+                MainActivity.title = MainActivity.shoppingList.getNome();
+                MainActivity.totalPrice.setText(String.valueOf(MainActivity.shoppingList.getTotalPrice()));
+                MainActivity.lv.setAdapter(MainActivity.adapter);
                 Intent intent = new Intent();
                 setResult(RESULT_FIRST_USER, intent);
                 finish();
