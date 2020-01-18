@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
 //Alterar o campo preço total para o valor obtido da lista de compras seleccionado
         totalPrice = findViewById(R.id.total_price);
-        totalPrice.setText(String.valueOf(shoppingList.getTotalPrice()));
+        totalPrice.setText(shoppingList.getTotalPrice() + "€");
 
 //Definir ação caso se pressione num item da listView durante tempo (Long Press)
 //Neste caso, ao pressionar por um tempo, irá aparecer uma caixa de diálogo a perguntar se tem a certeza que quer

@@ -91,7 +91,7 @@ public class AddItem extends AppCompatActivity {
             Product product = new Product (productName, productPrice, productUnity); //Criação de novo objeto Product com os inputs
             addItem(product);
 
-            MainActivity.totalPrice.setText(String.valueOf(MainActivity.shoppingList.getTotalPrice())); //Alterar imediatamente a label Preço total na main
+            MainActivity.totalPrice.setText(String.valueOf(MainActivity.shoppingList.getTotalPrice()) + "€"); //Alterar imediatamente a label Preço total na main
             setResult(RESULT_OK, intent);
             finish();
         }

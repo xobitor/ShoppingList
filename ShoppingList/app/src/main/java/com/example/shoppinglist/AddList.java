@@ -72,7 +72,7 @@ public class AddList extends AppCompatActivity {
     {
         MainActivity.shoppingLists.add(shpList);
         MainActivity.listItems.clear();
-        MainActivity.totalPrice.setText(String.valueOf(shpList.getTotalPrice()));
+        MainActivity.totalPrice.setText(shpList.getTotalPrice() + "€");
         ViewLists.lists.add(shpList.getNome());
     }
 }
