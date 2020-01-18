@@ -1,9 +1,10 @@
 package com.example.shoppinglist;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,15 +29,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static com.example.shoppinglist.ViewLists.lists;
+
 public class MainActivity extends AppCompatActivity {
 
 
-    static ShoppingList shoppingList = new ShoppingList("", new ArrayList<Product>());
+    static ShoppingList shoppingList = new ShoppingList("Default", new ArrayList<Product>());
     static List<ShoppingList> shoppingLists = new ArrayList<>();
     ListView lv = null;
     static List<HashMap<String, String>> listItems = new ArrayList<>();
     static HashMap<String, String> products = new HashMap<>();
     static SimpleAdapter adapter = null;
+    static TextView totalPrice = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         setTitle(shoppingList.getNome());
         getWindow().getDecorView().setBackgroundColor(Color.BLACK);
 
+        if (lists.size() == 0)
+        {
+            lists.add(shoppingList.getNome());
+            shoppingLists.add(shoppingList);
+        }
+
         adapter = new SimpleAdapter(this, listItems, R.layout.list_item,
                 new String[]{"First Line", "Second Line"}, new int[]{R.id.text1, R.id.text2});
 
@@ -53,17 +63,35 @@ public class MainActivity extends AppCompatActivity {
         lv.setAdapter(adapter);
         lv.setClickable(true);
 
+        totalPrice = findViewById(R.id.total_price);
+        totalPrice.setText(String.valueOf(shoppingList.getTotalPrice()));
+
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int arg2, long arg3)
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int arg2, long arg3)
             {
-                listItems.remove(arg2);
-                adapter.notifyDataSetChanged();
-                return false;
+                androidx.appcompat.app.AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
+                alertDialog.setTitle("Delete Item");
+                alertDialog.setMessage("Are you sure?");
+                alertDialog.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        listItems.remove(arg2);
+                        adapter.notifyDataSetChanged();
+                        lv.setAdapter(adapter);
+                    }
+                });
+                alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+                return true;
             }
         });
-
     }
 
     @Override
@@ -107,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             if (data != null) {
-                getActionBar().setTitle(shoppingList.getNome());
+                setTitle(shoppingList.getNome());
                 adapter.notifyDataSetChanged();
                 lv.setAdapter(adapter);
             }
@@ -117,7 +145,8 @@ public class MainActivity extends AppCompatActivity {
         {
             if (data != null)
             {
-                getActionBar().setTitle(shoppingList.getNome());
+                setTitle(shoppingList.getNome());
+                adapter.notifyDataSetChanged();
                 lv.setAdapter(adapter);
             }
         }

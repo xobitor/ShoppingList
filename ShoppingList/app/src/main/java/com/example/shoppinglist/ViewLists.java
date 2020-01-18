@@ -3,10 +3,14 @@ package com.example.shoppinglist;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -37,7 +41,25 @@ public class ViewLists extends AppCompatActivity {
 
         lv = findViewById(R.id.listView);
 
-        adapter = new ArrayAdapter (this, android.R.layout.simple_list_item_1, lists);
+        //adapter = new ArrayAdapter (this, android.R.layout.simple_list_item_1, lists);
+
+        adapter = new ArrayAdapter<String>
+                (this, android.R.layout.simple_list_item_1, lists){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent){
+                // Get the Item from ListView
+                View view = super.getView(position, convertView, parent);
+
+                // Initialize a TextView for ListView each Item
+                TextView tv = view.findViewById(android.R.id.text1);
+
+                // Set the text color of TextView (ListView Item)
+                tv.setTextColor(Color.WHITE);
+
+                // Generate ListView Item using TextView
+                return view;
+            }
+        };
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,12 +82,28 @@ public class ViewLists extends AppCompatActivity {
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int arg2, long arg3)
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int arg2, long arg3)
             {
-                lists.remove(arg2);
-                adapter.notifyDataSetChanged();
-                lv.setAdapter(adapter);
-                return false;
+                AlertDialog alertDialog = new AlertDialog.Builder(view.getContext()).create();
+                alertDialog.setTitle("Delete List");
+                alertDialog.setMessage("Are you sure?");
+                alertDialog.setButton(Dialog.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        lists.remove(arg2);
+                        adapter.notifyDataSetChanged();
+                        lv.setAdapter(adapter);
+                        finish();
+                    }
+                });
+                alertDialog.setButton(Dialog.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialog.show();
+                return true;
             }
         });
         lv.setAdapter(adapter);

@@ -6,4 +6,5 @@
     <string name="action_addList">Add List</string>
     <string name="view_lists">View Lists</string>
     <string name="enterListName">Enter the list name</string>
+    <string name="total_price_label">Total price</string>
 </resources>
