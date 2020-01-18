@@ -70,6 +70,8 @@ public class AddList extends AppCompatActivity {
     public void addList(ShoppingList shpList)
     {
         MainActivity.shoppingLists.add(shpList);
+        MainActivity.listItems.clear();
+        MainActivity.totalPrice.setText(String.valueOf(shpList.getTotalPrice()));
         ViewLists.lists.add(shpList.getNome());
     }
 }

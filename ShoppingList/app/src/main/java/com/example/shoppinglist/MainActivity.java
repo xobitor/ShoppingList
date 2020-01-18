@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        else if (resultCode == Activity.RESULT_FIRST_USER)
+        else if (resultCode == 2)
         {
             if (data != null)
             {
@@ -149,6 +149,12 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 lv.setAdapter(adapter);
             }
+        }
+        else if (resultCode == Activity.RESULT_FIRST_USER)
+        {
+            setTitle(shoppingList.getNome());
+            adapter.notifyDataSetChanged();
+            lv.setAdapter(adapter);
         }
 
     }
