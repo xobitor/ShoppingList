@@ -22,12 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ViewLists extends AppCompatActivity {
-
+//Inicialização de variáveis
     ListView lv = null;
-    //static SimpleAdapter adapter = null;
     static ArrayAdapter<String> adapter = null;
     static ArrayList<String> lists = new ArrayList<>();
-
     HashMap<String, String> resultsMap = new HashMap<>();
 
     @Override
@@ -36,41 +34,51 @@ public class ViewLists extends AppCompatActivity {
         setContentView(R.layout.activity_view_lists);
         getWindow().getDecorView().setBackgroundColor(Color.BLACK);
 
-        assert getSupportActionBar() != null;   //null check
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
-
+//Mostrar o botão "Back"
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//Armazenar na variável lv a listview da layout activity_view_lists
         lv = findViewById(R.id.listView);
 
-        //adapter = new ArrayAdapter (this, android.R.layout.simple_list_item_1, lists);
-
+//Como só é pretendido apresentar o nome das listas, criou-se um simples ArrayAdapter para esse efeito
         adapter = new ArrayAdapter<String>
                 (this, android.R.layout.simple_list_item_1, lists){
+
+//Como o fundo da aplicação é preto, para efeitos de vissibilidade, queremos o texto a branco
             @Override
             public View getView(int position, View convertView, ViewGroup parent){
-                // Get the Item from ListView
+//Obter o item da listview
                 View view = super.getView(position, convertView, parent);
 
-                // Initialize a TextView for ListView each Item
+//Inicializar uma variável para armazenar a linha da listview
                 TextView tv = view.findViewById(android.R.id.text1);
 
-                // Set the text color of TextView (ListView Item)
+//Mudar a cor do texto para branco
                 tv.setTextColor(Color.WHITE);
 
-                // Generate ListView Item using TextView
+//Mostrar o item
                 return view;
             }
         };
 
+//Definir acção ao clicar no item
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//Para seleccionar, primeiro obtém-se o item seleccionado da lista de ShoppingList da main
                 MainActivity.shoppingList = MainActivity.shoppingLists.get(position);
+
+//Ciclo para preencher o HashMap para depois apresentar os itens corretos na main
                 for (int i = 0; i<MainActivity.shoppingList.getProducts().size(); i++)
                 {
+//Primeiro, para ter a certeza que não se repetem itens, limpa-se a variável resultsMap
+//Depois, adiciona-se o nome do produto para ser a primeira linha e o preço e unidade na segunda
                     resultsMap.clear();
                     resultsMap.put("First Line", MainActivity.shoppingList.getProducts().get(i).getNome());
                     resultsMap.put("Second Line", MainActivity.shoppingList.getProducts().get(i).getPreco() + "€/" + MainActivity.shoppingList.getProducts().get(i).getUnidade());
                 }
+//Limpa-se a lista de  hashMap definido para apresentar os itens na main e adiciona-se este hashMap, para apresentar os itens corretos
                 MainActivity.listItems.clear();
                 MainActivity.listItems.add(resultsMap);
                 MainActivity.title = MainActivity.shoppingList.getNome();
@@ -81,7 +89,9 @@ public class ViewLists extends AppCompatActivity {
                 finish();
             }
         });
-
+//Definir ação ao manter pressionado numa lista durante um tempo
+//A acção é idêntica à acção da main. Ao manter pressionado, aparecerá uma caixa de diálogo a perguntar se tem a certeza
+//que quer apagar o item seleccionado, apagando ao clicar em "OK"
         lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
@@ -112,6 +122,7 @@ public class ViewLists extends AppCompatActivity {
         lv.setAdapter(adapter);
     }
 
+//Ação do botão "Back"
     @Override
     public boolean onSupportNavigateUp(){
         finish();

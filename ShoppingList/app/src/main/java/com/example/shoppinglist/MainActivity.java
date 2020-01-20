@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     static HashMap<String, String> products = new HashMap<>();
     static SimpleAdapter adapter = null;
     static TextView totalPrice = null;
-    static String title = null;
+    static String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             if (data != null) {
-                title = shoppingList.getNome();
-                setTitle(title);
                 adapter.notifyDataSetChanged();
                 lv.setAdapter(adapter);
             }
